@@ -1,30 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".CriarContaFragment">
 
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/imgb_arrow"
+        android:layout_width="77dp"
+        android:layout_height="55dp"
+        android:background="@color/white"
+        android:scaleType="centerCrop"
+        android:src="@drawable/arrow">
+
+    </androidx.appcompat.widget.AppCompatImageButton>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_uteethlogo"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_marginTop="5dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/uteeth_png"
+        tools:ignore="MissingConstraints" />
+
     <TextView
-        android:id="@+id/textview_second"
+        android:id="@+id/tv_create"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/button_second"
+        android:layout_marginLeft="30dp"
+        android:textSize="20dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Create your account"
+        android:layout_marginTop="20dp"
         />
 
-    <Button
-        android:id="@+id/button_second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/previous"
-        app:layout_constraintTop_toBottomOf="@id/textview_second"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+    <EditText
+        android:id="@+id/et_email_create"
+        style="@style/edit_text"
+        android:fontFamily="@font/poppins_medium"
+        android:padding="5dp"
+        android:shadowColor="@color/black"
+        android:elevation="5dp"
+
+        android:hint="E-mail">
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/et_password_create"
+        style="@style/edit_text"
+        android:fontFamily="@font/poppins_medium"
+        android:padding="5dp"
+        android:shadowColor="@color/black"
+        android:elevation="5dp"
+        android:hint="Password"
+        app:passwordToggleEnabled="true"
+        >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/et_telefone_create"
+        style="@style/edit_text"
+        android:fontFamily="@font/poppins_medium"
+        android:padding="5dp"
+        android:shadowColor="@color/black"
+        android:elevation="5dp"
+
+        android:hint="Phone">
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/et_adress_1"
+        style="@style/edit_text"
+        android:fontFamily="@font/poppins_medium"
+        android:padding="5dp"
+        android:shadowColor="@color/black"
+        android:elevation="5dp"
+
+        android:hint="Adress 1">
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/et_adress_2"
+        style="@style/edit_text"
+        android:fontFamily="@font/poppins_medium"
+        android:padding="5dp"
+        android:shadowColor="@color/black"
+        android:elevation="5dp"
+
+        android:hint="Adress 2">
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/et_adress_3"
+        style="@style/edit_text"
+        android:elevation="5dp"
+        android:fontFamily="@font/poppins_medium"
+        android:hint="Adress 3"
+        android:padding="5dp"
+
+        android:shadowColor="@color/black">
+
+    </EditText>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_next"
+        style="@style/containerComponents"
+        android:text="Next"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/poppins"
+        android:layout_height="65dp"
+        android:elevation="100dp"
         />
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>
