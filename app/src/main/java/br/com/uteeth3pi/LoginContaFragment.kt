@@ -1,19 +1,28 @@
 package br.com.uteeth3pi
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import br.com.uteeth3pi.databinding.FragmentFirstBinding
+import br.com.uteeth3pi.databinding.FragmentLoginContaBinding
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class LoginContaFragment : Fragment() {
 
-private var _binding: FragmentFirstBinding? = null
+    private var _binding: FragmentLoginContaBinding? = null
+    private val auth = FirebaseAuth.getInstance()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -23,7 +32,7 @@ private var _binding: FragmentFirstBinding? = null
         savedInstanceState: Bundle?
     ): View? {
 
-      _binding = FragmentFirstBinding.inflate(inflater, container, false)
+      _binding = FragmentLoginContaBinding.inflate(inflater, container, false)
       return binding.root
 
     }
@@ -31,8 +40,39 @@ private var _binding: FragmentFirstBinding? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        binding.btnSignUp.setOnClickListener {view ->
+            findNavController().navigate(R.id.action_LoginFragment_to_CriarContaFragment)
+        }
+        binding.btnSignIn.setOnClickListener{view ->
+            val email = binding.etEmailLogin.text.toString()
+            val senha = binding.etPasswordLogin.text.toString()
+
+            if (email.isEmpty() || senha.isEmpty()){
+                val snackbar = Snackbar.make(view, "Preencha todos os campos!", Snackbar.LENGTH_SHORT)
+                snackbar.setBackgroundTint(Color.RED)
+                snackbar.show()
+            }else{
+                auth.signInWithEmailAndPassword(email, senha).addOnCompleteListener{autenticacao ->
+                    if (autenticacao.isSuccessful){
+                        findNavController().navigate(R.id.action_LoginFragment_to_HomeFragment)
+                    }
+
+                }.addOnFailureListener{ exception ->
+                    val mensagemErro = when(exception){
+                        is FirebaseAuthWeakPasswordException -> "Digite uma senha com no mínimo 6 caracteres!"
+                        is FirebaseAuthInvalidCredentialsException -> "Digite um email válido!"
+                        is FirebaseAuthUserCollisionException -> "Esta conta já foi cadastrada!"
+                        is FirebaseNetworkException -> "Sem conexão com a internet!"
+                        else -> "Erro ao cadastrar usuário!"
+                    }
+                    val snackbar = Snackbar.make(view, mensagemErro, Snackbar.LENGTH_SHORT)
+                    snackbar.setBackgroundTint(Color.RED)
+                    snackbar.show()
+
+                }
+            }
+
+
         }
     }
 
