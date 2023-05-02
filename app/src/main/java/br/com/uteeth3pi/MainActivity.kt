@@ -1,6 +1,10 @@
 package br.com.uteeth3pi
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -14,10 +18,14 @@ import br.com.uteeth3pi.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        supportActionBar?.hide()
+        window.statusBarColor= Color.parseColor("#040957")
 
      binding = ActivityMainBinding.inflate(layoutInflater)
      setContentView(binding.root)

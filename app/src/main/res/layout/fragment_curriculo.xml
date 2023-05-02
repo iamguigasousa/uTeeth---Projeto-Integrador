@@ -45,6 +45,7 @@
         android:layout_marginTop="20dp"
         android:fontFamily="@font/poppins_semibold"
         android:text="Write a resume, up to 2000 words"
+        android:layout_marginLeft="20dp"
         android:textSize="20dp" />
 
     <EditText
@@ -55,8 +56,8 @@
         android:fontFamily="@font/poppins_medium"
         android:gravity="center|top"
         android:hint="Resume"
+        android:maxLength="2000"
         android:padding="5dp"
-
         android:shadowColor="@color/black" />
 
     <androidx.appcompat.widget.AppCompatButton

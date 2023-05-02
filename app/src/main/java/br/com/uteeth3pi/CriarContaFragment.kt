@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import br.com.uteeth3pi.databinding.FragmentCriarContaBinding
 import com.google.android.material.snackbar.Snackbar
@@ -39,6 +40,12 @@ class CriarContaFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        binding.imgbArrow.setOnClickListener {
+            findNavController().navigate(R.id.action_CriarContaFragment_to_LoginFragment)
+
+        }
 
         binding.btnNext.setOnClickListener {view ->
             findNavController().navigate(R.id.action_CriarContaFragment_to_CurriculoFragment)
@@ -76,6 +83,16 @@ class CriarContaFragment : Fragment() {
             }
 
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 override fun onDestroyView() {
         super.onDestroyView()

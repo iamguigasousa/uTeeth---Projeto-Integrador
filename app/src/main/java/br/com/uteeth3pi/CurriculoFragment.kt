@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import br.com.uteeth3pi.databinding.FragmentCurriculoBinding
 import com.google.android.material.snackbar.Snackbar
@@ -40,10 +41,25 @@ class CurriculoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.imgbArrow.setOnClickListener {
+            findNavController().navigate(R.id.action_CurriculoFragment_to_CriarContaFragment)
+
+        }
+
         binding.btnSignUp.setOnClickListener {view ->
             findNavController().navigate(R.id.action_CurriculoFragment_to_LoginFragment)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
     override fun onDestroyView() {
