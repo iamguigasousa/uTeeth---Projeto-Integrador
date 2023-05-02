@@ -1,100 +1,142 @@
 package br.com.uteeth3pi
 
-import android.content.Intent
-import android.graphics.Color
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import br.com.uteeth3pi.databinding.FragmentCriarContaBinding
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
+import com.google.gson.GsonBuilder
+import org.json.JSONArray
+import org.json.JSONObject
 
 /**
- * A simple [Fragment] subclass as the second destination in the navigation.
+ * Fragment para o cadastro de conta.
  */
 class CriarContaFragment : Fragment() {
 
+    private val TAG = "SignUpFragment"
+    private lateinit var auth: FirebaseAuth
+    private lateinit var functions: FirebaseFunctions
+    private val gson = GsonBuilder().enableComplexMapKeySerialization().create()
+
     private var _binding: FragmentCriarContaBinding? = null
-    private val auth = FirebaseAuth.getInstance()
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-      _binding = FragmentCriarContaBinding.inflate(inflater, container, false)
-      return binding.root
-
+        _binding = FragmentCriarContaBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        binding.imgbArrow.setOnClickListener {
-            findNavController().navigate(R.id.action_CriarContaFragment_to_LoginFragment)
-
+        binding.btnNext.setOnClickListener {
+            // criar a conta...
+            signUpNewAccount(
+                binding.etNameCreate.text.toString(),
+                binding.etTelefoneCreate.text.toString(),
+                binding.etEmailCreate.text.toString(),
+                binding.etPasswordCreate.text.toString(),
+                (activity as MainActivity).getFcmToken()
+            );
         }
+    }
 
-        binding.btnNext.setOnClickListener {view ->
-            findNavController().navigate(R.id.action_CriarContaFragment_to_CurriculoFragment)
-            val email = binding.etEmailCreate.text.toString()
-            val senha = binding.etEmailCreate.text.toString()
+    fun JSONObject.toMap(): Map<String, *> = keys().asSequence().associateWith {
+        when (val value = this[it])
+        {
+            is JSONArray ->
+            {
+                val map = (0 until value.length()).associate { Pair(it.toString(), value[it]) }
+                JSONObject(map).toMap().values.toList()
+            }
+            is JSONObject -> value.toMap()
+            JSONObject.NULL -> null
+            else            -> value
+        }
+    }
 
+    private fun hideKeyboard(){
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+    }
 
-            if (email.isEmpty() || senha.isEmpty()){
-                val snackbar = Snackbar.make(view, "Preencha todos os campos!", Snackbar.LENGTH_SHORT)
-                snackbar.setBackgroundTint(Color.RED)
-                snackbar.show()
-            }else{
-                auth.createUserWithEmailAndPassword(email, senha).addOnCompleteListener{ cadastro ->
-                    if (cadastro.isSuccessful){
-                        val snackbar = Snackbar.make(view, "Você foi cadastrado!", Snackbar.LENGTH_SHORT)
-                        snackbar.setBackgroundTint(Color.GREEN)
-                        snackbar.show()
-                        binding.etEmailCreate.setText("")
-                        binding.etPasswordCreate.setText("")
+    private fun signUpNewAccount(nome: String, telefone: String, email: String, password: String, fcmToken: String) {
+        auth = Firebase.auth
+        // auth.useEmulator("127.0.0.1", 5001)
+        // invocar a função e receber o retorno fazendo Cast para "CustomResponse"
 
-                    }
-                }.addOnFailureListener{ exception ->
-                    val mensagemErro = when(exception){
-                        is FirebaseAuthWeakPasswordException -> "Digite uma senha com no mínimo 6 caracteres!"
-                        is FirebaseAuthInvalidCredentialsException -> "Digite um email válido!"
-                        is FirebaseAuthUserCollisionException -> "Esta conta já foi cadastrada!"
-                        is FirebaseNetworkException -> "Sem conexão com a internet!"
-                        else -> "Erro ao cadastrar usuário!"
-                    }
-                    val snackbar = Snackbar.make(view, mensagemErro, Snackbar.LENGTH_SHORT)
-                    snackbar.setBackgroundTint(Color.RED)
-                    snackbar.show()
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "createUserWithEmail:success")
+                    val user = auth.currentUser
+                    (activity as MainActivity).storeUserId(user!!.uid)
+                    // atualizar o perfil do usuário com os dados chamando a function.
+                    updateUserProfile(nome, telefone, email, user!!.uid, fcmToken)
+                        .addOnCompleteListener(requireActivity()) { res ->
+                            // conta criada com sucesso.
+                            if(res.result.status == "SUCCESS"){
+                                hideKeyboard()
+                                Snackbar.make(requireView(),"Conta cadastrada! Pode fazer o login!",Snackbar.LENGTH_LONG).show()
+                                findNavController().navigate(R.id.action_CriarContaFragment_to_LoginFragment)
+                            }
+                        }
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                    Toast.makeText(requireActivity(), "Authentication failed.",
+                        Toast.LENGTH_SHORT).show()
 
+                    // dar seguimento ao tratamento de erro.
                 }
             }
-
-        }
     }
 
-    override fun onResume() {
-        super.onResume()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    private fun updateUserProfile(nome: String, telefone: String, email: String, uid: String, fcmToken: String) : Task<CustomResponse>{
+        // chamar a function para atualizar o perfil.
+        functions = Firebase.functions("southamerica-east1")
+
+        // Create the arguments to the callable function.
+        val data = hashMapOf(
+            "nome" to nome,
+            "telefone" to telefone,
+            "email" to email,
+            "uid" to uid,
+            "fcmToken" to fcmToken
+        )
+
+        return functions
+            .getHttpsCallable("setUserProfile")
+            .call(data)
+            .continueWith { task ->
+
+                val result = gson.fromJson((task.result?.data as String), CustomResponse::class.java)
+                result
+            }
+
     }
 
-    override fun onStop() {
-        super.onStop()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-    }
-override fun onDestroyView() {
+    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
