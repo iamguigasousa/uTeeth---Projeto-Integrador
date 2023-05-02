@@ -55,6 +55,9 @@ class CriarContaFragment : Fragment() {
                 binding.etTelefoneCreate.text.toString(),
                 binding.etEmailCreate.text.toString(),
                 binding.etPasswordCreate.text.toString(),
+                binding.etAdress1.text.toString(),
+                binding.etAdress2.text.toString(),
+                binding.etAdress3.text.toString(),
                 (activity as MainActivity).getFcmToken()
             );
         }
@@ -79,54 +82,78 @@ class CriarContaFragment : Fragment() {
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
-    private fun signUpNewAccount(nome: String, telefone: String, email: String, password: String, fcmToken: String) {
-        auth = Firebase.auth
-        // auth.useEmulator("127.0.0.1", 5001)
-        // invocar a função e receber o retorno fazendo Cast para "CustomResponse"
+    private fun signUpNewAccount(nome: String, telefone: String, email: String, password: String, fcmToken: String, address1: String, address2: String, address3: String) : Task<CustomResponse> {
+//
+             functions = Firebase.functions("southamerica-east1")
 
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
-                    (activity as MainActivity).storeUserId(user!!.uid)
-                    // atualizar o perfil do usuário com os dados chamando a function.
-                    updateUserProfile(nome, telefone, email, user!!.uid, fcmToken)
-                        .addOnCompleteListener(requireActivity()) { res ->
-                            // conta criada com sucesso.
-                            if(res.result.status == "SUCCESS"){
-                                hideKeyboard()
-                                Snackbar.make(requireView(),"Conta cadastrada! Pode fazer o login!",Snackbar.LENGTH_LONG).show()
-                                findNavController().navigate(R.id.action_CriarContaFragment_to_LoginFragment)
-                            }
-                        }
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(requireActivity(), "Authentication failed.",
-                        Toast.LENGTH_SHORT).show()
+                // Create the arguments to the callable function.
+                val data = hashMapOf(
+                    "name" to nome,
+                    "password" to password,
+                    "phone" to telefone,
+                    "email" to email,
+                    "fcmToken" to fcmToken,
+                    "curriculum" to "10 anos de experiencia",
+                    "address" to {"address1" to address1; "address2" to address2; "address3" to address3 }
+                )
 
-                    // dar seguimento ao tratamento de erro.
-                }
-            }
+                return functions
+                    .getHttpsCallable("createDentista")
+                    .call(data)
+                    .continueWith { task ->
+
+                        val result = gson.fromJson((task.result?.data as String), CustomResponse::class.java)
+                        result
+                    }
+
+    //        auth = Firebase.auth
+//        // auth.useEmulator("127.0.0.1", 5001)
+//        // invocar a função e receber o retorno fazendo Cast para "CustomResponse"
+//
+//        auth.createUserWithEmailAndPassword(email, password)
+//            .addOnCompleteListener(requireActivity()) { task ->
+//                if (task.isSuccessful) {
+//                    // Sign in success, update UI with the signed-in user's information
+//                    Log.d(TAG, "createUserWithEmail:success")
+//                    val user = auth.currentUser
+//                    (activity as MainActivity).storeUserId(user!!.uid)
+//                    // atualizar o perfil do usuário com os dados chamando a function.
+//                    updateUserProfile(nome, telefone, email, user!!.uid, fcmToken, address1, address2, address3)
+//                        .addOnCompleteListener(requireActivity()) { res ->
+//                            // conta criada com sucesso.
+//                            if(res.result.status == "SUCCESS"){
+//                                hideKeyboard()
+//                                Snackbar.make(requireView(),"Conta cadastrada! Pode fazer o login!",Snackbar.LENGTH_LONG).show()
+//                                findNavController().navigate(R.id.action_CriarContaFragment_to_LoginFragment)
+//                            }
+//                        }
+//                } else {
+//                    // If sign in fails, display a message to the user.
+//                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
+//                    Toast.makeText(requireActivity(), "Authentication failed.",
+//                        Toast.LENGTH_SHORT).show()
+//
+//                    // dar seguimento ao tratamento de erro.
+//                }
+//            }
     }
 
-    private fun updateUserProfile(nome: String, telefone: String, email: String, uid: String, fcmToken: String) : Task<CustomResponse>{
+    private fun updateUserProfile(nome: String, telefone: String, email: String, uid: String, fcmToken: String, address1: String, address2: String, address3: String) : Task<CustomResponse>{
         // chamar a function para atualizar o perfil.
         functions = Firebase.functions("southamerica-east1")
 
         // Create the arguments to the callable function.
         val data = hashMapOf(
-            "nome" to nome,
-            "telefone" to telefone,
+            "name" to nome,
+            "phone" to telefone,
             "email" to email,
             "uid" to uid,
-            "fcmToken" to fcmToken
+            "fcmToken" to fcmToken,
+            "address" to {"address1" to address1; "address2" to address2; "address3" to address3 }
         )
 
         return functions
-            .getHttpsCallable("setUserProfile")
+            .getHttpsCallable("updateDentista")
             .call(data)
             .continueWith { task ->
 
