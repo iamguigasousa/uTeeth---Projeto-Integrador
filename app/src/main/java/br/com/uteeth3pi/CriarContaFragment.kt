@@ -48,6 +48,10 @@ class CriarContaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.imgbArrow.setOnClickListener {
+            findNavController().navigate(R.id.action_CriarContaFragment_to_LoginFragment)
+        }
+
         binding.btnNext.setOnClickListener {
             // criar a conta...
             signUpNewAccount(

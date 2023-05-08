@@ -21,12 +21,14 @@ class SplashScreenFragment : Fragment() {
         savedInstanceState: Bundle?
 
 
+
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_splash_screen, container, false)
 
 
 
+        
 
 
         Handler(Looper.myLooper()!!).postDelayed({
@@ -40,16 +42,6 @@ class SplashScreenFragment : Fragment() {
 
 
 
-    override fun onResume() {
-        super.onResume()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-
-    }
-
-    override fun onStop() {
-        super.onStop()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-    }
 
 
 }

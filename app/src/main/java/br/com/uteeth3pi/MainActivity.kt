@@ -101,11 +101,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
 
-        navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
 
         // disponibilizando o token (que deve ser colocado lá no APP CHECK do Firebase).
         prepareFirebaseAppCheckDebug()
