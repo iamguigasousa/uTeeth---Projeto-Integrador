@@ -28,7 +28,7 @@ class SplashScreenFragment : Fragment() {
 
 
 
-        
+
 
 
         Handler(Looper.myLooper()!!).postDelayed({

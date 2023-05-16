@@ -2,6 +2,7 @@ package br.com.uteeth3pi
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
@@ -101,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        window.statusBarColor=Color.parseColor("#040957")
 
         // disponibilizando o token (que deve ser colocado lá no APP CHECK do Firebase).
         prepareFirebaseAppCheckDebug()
