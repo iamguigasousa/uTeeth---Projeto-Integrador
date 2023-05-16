@@ -35,14 +35,14 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:textSize="20dp"
-        android:fontFamily="@font/poppins_semibold"
+        android:fontFamily="@font/poppinssemibold"
         android:text="Login to your Account" />
 
 
     <EditText
         android:id="@+id/et_email_login"
         style="@style/edit_text"
-        android:fontFamily="@font/poppins_medium"
+        android:fontFamily="@font/poppinsmedium"
         android:padding="5dp"
         android:shadowColor="@color/black"
         android:elevation="5dp"
@@ -54,7 +54,7 @@
     <EditText
         android:id="@+id/et_password_login"
         style="@style/edit_text"
-        android:fontFamily="@font/poppins_medium"
+        android:fontFamily="@font/poppinsmedium"
         android:padding="5dp"
         android:shadowColor="@color/black"
         android:elevation="5dp"
@@ -75,7 +75,7 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:layout_marginBottom="20dp"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppinsregular"
         android:layout_height="65dp"
         android:elevation="100dp"
         />
@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:text="-Or Sign with-"
         android:layout_gravity="center"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppinslight"
 
         />
 
@@ -127,7 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="20dp"
-            android:fontFamily="@font/poppins_semibold"
+            android:fontFamily="@font/poppinssemibold"
             android:text="Don't have an account?"
             android:textSize="20dp" />
 
@@ -136,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:fontFamily="@font/poppins_semibold"
+            android:fontFamily="@font/poppinssemibold"
             android:textColor="#040957"
             android:text="   Sign Up"
             android:textSize="20dp">

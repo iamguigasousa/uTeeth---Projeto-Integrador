@@ -43,7 +43,7 @@
         android:layout_gravity="center"
 
         android:layout_marginTop="20dp"
-        android:fontFamily="@font/poppins_semibold"
+        android:fontFamily="@font/poppinssemibold"
         android:text="Write a resume, up to 2000 words"
         android:layout_marginLeft="20dp"
         android:textSize="20dp" />
@@ -53,7 +53,7 @@
         style="@style/edit_text"
         android:layout_height="279dp"
         android:elevation="5dp"
-        android:fontFamily="@font/poppins_medium"
+        android:fontFamily="@font/poppinsmedium"
         android:gravity="center|top"
         android:hint="Resume"
         android:maxLength="2000"
@@ -67,7 +67,7 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:layout_marginBottom="20dp"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppinsregular"
         android:layout_height="65dp"
         android:elevation="100dp"
         />
