@@ -54,6 +54,12 @@
         android:name="br.com.uteeth3pi.HomeFragment"
         android:label="Tela Inicial"
         tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_HomeFragment_to_accountDetailsFragment"
+            app:destination="@id/accountDetailsFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
@@ -63,5 +69,14 @@
         <action
             android:id="@+id/action_splashScreenFragment_to_LoginFragment"
             app:destination="@id/LoginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountDetailsFragment"
+        android:name="br.com.uteeth3pi.AccountDetailsFragment"
+        android:label="fragment_home_account"
+        tools:layout="@layout/fragment_home_account" >
+        <action
+            android:id="@+id/action_accountDetailsFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
     </fragment>
 </navigation>
