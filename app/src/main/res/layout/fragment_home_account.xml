@@ -329,7 +329,7 @@
                                 </LinearLayout>
 
                                 <View
-                                    android:id="@+id/view"
+                                    android:id="@+id/view28"
                                     android:layout_width="match_parent"
                                     android:layout_height="1dp"
                                     android:layout_marginStart="10dp"
@@ -596,12 +596,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_edit_profile"
+            android:id="@+id/btn_voltar"
             style="@style/containerComponents"
             android:layout_height="65dp"
             android:elevation="100dp"
             android:fontFamily="@font/poppinsregular"
-            android:text="Editar Perfil"
+            android:text="Voltar"
             android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>

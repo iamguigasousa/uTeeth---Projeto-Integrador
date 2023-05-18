@@ -14,9 +14,7 @@ class EmergencyFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.btnSignUp.setOnClickListener {
-            findNavController().navigate(R.id.action_LoginFragment_to_CriarContaFragment)
-        }
+
 
     }
 
